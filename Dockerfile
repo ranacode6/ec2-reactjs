@@ -1,4 +1,4 @@
-FROM node:22-alpine as builder
+FROM node:22-alpine
 
 # Declare environment variables in build time
 ARG VITE_SERVER_URL
@@ -20,5 +20,7 @@ COPY . .
 # Build the application
 RUN npm run build
 
-RUN ["npm", "start"]
+EXPOSE 3000
+
+CMD ["npm", "start"]
 
