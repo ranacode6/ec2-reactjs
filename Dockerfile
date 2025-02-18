@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22-alpine as builder
 
 # Declare environment variables in build time
 ARG VITE_SERVER_URL
@@ -20,7 +20,15 @@ COPY . .
 # Build the application
 RUN npm run build
 
-EXPOSE 3000
+# Production stage
+FROM nginx:1-alpine
 
-CMD ["npm", "start"]
+# Copy the built assets from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
 
